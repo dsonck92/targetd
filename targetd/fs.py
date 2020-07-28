@@ -86,7 +86,7 @@ def initialize(config_dict):
                                    'Unsupported filesystem {0} for pool {1}'.format(info[2], info[1]))
 
     for modname, mod in pool_modules.items():
-        mod.initialize(config_dict, pools[modname])
+        mod.fs_initialize(config_dict, pools[modname])
 
     return dict(
         fs_list=fs,
