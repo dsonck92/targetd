@@ -175,6 +175,7 @@ for fs_pool in fs_pools:
 
                 ss_results = jsonrequest('ss_list', dict(fs_uuid=fs_uuid))
 
+                has_snapshot = False
                 for ss in ss_results:
                     print("{uuid} -> {name} ({timestamp})".format(**ss))
                     if ss['name'] != "test-snapshot":
@@ -182,6 +183,7 @@ for fs_pool in fs_pools:
                         raise Exception("unrecognized snapshot")
 
                     ss_uuid = ss['uuid']
+                    has_snapshot = True
 
                     clone_uuid = None
 
@@ -202,12 +204,24 @@ for fs_pool in fs_pools:
                     finally:
                         if clone_uuid is not None:
                             jsonrequest("fs_destroy",dict(uuid=clone_uuid))
+
+                if not has_snapshot:
+                    failed = True
+                    raise Exception("test-snapshot not found")
+
             finally:
                 if ss_uuid is not None:
                     jsonrequest("fs_snapshot_delete", dict(fs_uuid=fs_uuid, ss_uuid=ss_uuid))
     finally:
         if fs_uuid is not None:
             jsonrequest("fs_destroy", dict(uuid=fs_uuid))
+
+    print("fs'es left over:")
+    results = jsonrequest("fs_list")
+    for fs in results:
+        print("{pool}: {uuid} -> {name}".format(**fs))
+        # No filesystems should be left
+        failed = True
 
     if failed:
         print("Test failed")
