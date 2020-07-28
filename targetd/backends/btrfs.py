@@ -108,6 +108,14 @@ def pool_check(pool_name):
                            "Invalid filesystem pool")
 
 
+def has_fs_pool(pool_name):
+    """
+        This can be used to check if module owns given fs_pool without raising
+        exception
+    """
+    return pool_name in pools
+
+
 def fs_create(req, pool_name, name, size_bytes):
     pool_check(pool_name)
 
