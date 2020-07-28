@@ -134,8 +134,8 @@ def fs_initialize(config_dict, init_pools):
     global fs_pools
     global zfs_enable_copy
     zfs_enable_copy = zfs_enable_copy or config_dict['zfs_enable_copy']
-    check_pools_access(init_pools)
-    fs_pools = init_pools
+    fs_pools = [fs['device'] for fs in init_pools]
+    check_pools_access(fs_pools)
 
 
 def _check_dataset_name(name):
