@@ -215,8 +215,7 @@ def fs_hash():
                         total_space=total,
                         free_space=free,
                         pool=pool,
-                        full_path=key,
-                        mod='btrfs'
+                        full_path=key
                     )
 
     return fs_list

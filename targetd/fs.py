@@ -52,7 +52,7 @@ pools = {
     "btrfs": []
 }
 pool_modules = {
-    "zfs": zfs,
+    # disable for now:  "zfs": zfs,
     "btrfs": btrfs
 }
 
