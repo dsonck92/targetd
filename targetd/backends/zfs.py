@@ -23,7 +23,7 @@ from time import time, mktime, strptime
 from targetd.main import TargetdError
 
 pools = []
-fs_pools = []
+pools_fs = []
 zfs_cmd = ""
 zfs_enable_copy = False
 ALLOWED_DATASET_NAMES = re.compile('^[A-Za-z0-9][A-Za-z0-9_.\-]*$')
@@ -131,11 +131,11 @@ def initialize(config_dict, init_pools):
 
 
 def fs_initialize(config_dict, init_pools):
-    global fs_pools
+    global pools_fs
     global zfs_enable_copy
     zfs_enable_copy = zfs_enable_copy or config_dict['zfs_enable_copy']
-    fs_pools = [fs['device'] for fs in init_pools]
-    check_pools_access(fs_pools)
+    pools_fs = [fs['device'] for fs in init_pools]
+    check_pools_access(pools_fs)
 
 
 def _check_dataset_name(name):
@@ -262,7 +262,7 @@ def fs_hash():
 
     fs_list = {}
 
-    for pool in fs_pools:
+    for pool in pools_fs:
         allprops = _zfs_get([pool], ["name","mountpoint","guid","used","available"], True, "filesystem")
 
         for fullname, props in allprops.items():
@@ -407,3 +407,14 @@ def fs_snapshot_delete(req, pool, name, ss_name):
 
 def fs_clone(req, pool, name, dest_fs_name, snapshot_name=None):
     _copy(req, pool, name, dest_fs_name, snapshot_name)
+
+def fs_pools(req):
+    results = []
+
+    for pool in pools_fs:
+        allprops = _zfs_get([pool], ["name","used","available"], False, "filesystem")
+        if pool in allprops:
+            props = allprops[pool]
+            results.append(dict(name=pool, size=(int(props["used"])+int(props["available"])), free_size=int(props["available"]), type='fs'))
+
+    return results
