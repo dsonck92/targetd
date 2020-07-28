@@ -27,10 +27,6 @@ pools_fs = []
 zfs_cmd = ""
 zfs_enable_copy = False
 ALLOWED_DATASET_NAMES = re.compile('^[A-Za-z0-9][A-Za-z0-9_.\-]*$')
-zfs_env = os.environ.copy()
-# Limit the potential output formats of date, might require some tweaks to
-# strptime to consider "C" locale
-zfs_env["LC_ALL"] = "C"
 
 class VolInfo(object):
     """
@@ -161,7 +157,7 @@ def _zfs_find_cmd():
 def _zfs_exec_command(args=None):
     if args is None:
         args = []
-    proc = subprocess.Popen([zfs_cmd] + args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=zfs_env)
+    proc = subprocess.Popen([zfs_cmd] + args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     (out, err) = proc.communicate()
     if proc.returncode != 0:
         logging.debug("zfs command returned non-zero status: %s, %s. Stderr: %s. Stdout: %s"
