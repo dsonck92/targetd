@@ -18,7 +18,6 @@
 
 import os
 import time
-from targetd.nfs import Nfs, Export
 from targetd.utils import invoke, TargetdError
 
 # Notes:
@@ -58,7 +57,7 @@ def fs_initialize(config_dict, init_pools):
             create_sub_volume(os.path.join(pool, fs_path))
             create_sub_volume(os.path.join(pool, ss_path))
         except TargetdError as e:
-            log.error('Unable to create required subvolumes {0}'.format(e))
+            log.error('Unable to create required subvolumes {0} (Btrfs)'.format(e))
             raise
 
 
@@ -105,7 +104,7 @@ def pool_check(pool_name):
     """
     if pool_name not in pools:
         raise TargetdError(TargetdError.INVALID_POOL,
-                           "Invalid filesystem pool")
+                           "Invalid filesystem pool (Btrfs)")
 
 
 def has_fs_pool(pool_name):
@@ -124,7 +123,7 @@ def fs_create(req, pool_name, name, size_bytes):
     if not os.path.exists(full_path):
         invoke([fs_cmd, 'subvolume', 'create', full_path])
     else:
-        raise TargetdError(TargetdError.EXISTS_FS_NAME, 'FS already exists')
+        raise TargetdError(TargetdError.EXISTS_FS_NAME, 'FS already exists (Btrfs)')
 
 
 def fs_snapshot(req, pool, name, dest_ss_name):
@@ -136,7 +135,7 @@ def fs_snapshot(req, pool, name, dest_ss_name):
 
     if os.path.exists(dest_path):
         raise TargetdError(TargetdError.EXISTS_FS_NAME,
-                           "Snapshot already exists with that name")
+                           "Snapshot already exists with that name (Btrfs)")
 
     invoke([fs_cmd, 'subvolume', 'snapshot', '-r', source_path, dest_path])
 
@@ -191,11 +190,11 @@ def _invoke_retries(command, throw_exception):
             continue
         else:
             raise TargetdError(TargetdError.UNEXPECTED_EXIT_CODE,
-                               "Unexpected exit code %d" % result)
+                               "Unexpected exit code %d (Btrfs)" % result)
 
     raise TargetdError(TargetdError.UNEXPECTED_EXIT_CODE,
                        "Unable to execute command after "
-                       "multiple retries %s" % (str(command)))
+                       "multiple retries %s (Btrfs)" % (str(command)))
 
 
 def fs_hash():
@@ -268,6 +267,6 @@ def fs_clone(req, pool, name, dest_fs_name, snapshot_name=None):
 
     if os.path.exists(dest):
         raise TargetdError(TargetdError.EXISTS_CLONE_NAME,
-                           "Filesystem with that name exists")
+                           "Filesystem with that name exists (Btrfs)")
 
     invoke([fs_cmd, 'subvolume', 'snapshot', source, dest])
