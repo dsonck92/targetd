@@ -280,8 +280,8 @@ def fs_hash():
     return fs_list
 
 
-def vol_info(pool, name):
-    props = _zfs_get([pool + "/" + name], ["guid", "volsize"], fstype="volume")
+def vol_info(pool, name, fstype="volume"):
+    props = _zfs_get([pool + "/" + name], ["guid", "volsize"], fstype=fstype)
     if (pool + "/" + name) in props:
         props = props[pool + "/" + name]
         return VolInfo(props["guid"], int(props["volsize"]))
@@ -334,18 +334,18 @@ def fs_destroy(req, pool, name):
 
 
 def copy(req, pool, vol_orig, vol_new, timeout=10):
-    _copy(req, pool, vol_orig, vol_new)
+    _copy(req, pool, vol_orig, vol_new, "volume")
 
 
-def _copy(req, pool, vol_orig, vol_new, snap = None):
+def _copy(req, pool, vol_orig, vol_new, fs_type, snap = None):
     if not zfs_enable_copy:
         raise TargetdError(TargetdError.NO_SUPPORT, "Copy on ZFS disabled. Consult manual before enabling it.")
     _check_dataset_name(vol_orig)
     _check_dataset_name(vol_new)
-    if vol_info(pool, vol_orig) is None:
+    if vol_info(pool, vol_orig, fs_type) is None:
         raise TargetdError(TargetdError.INVALID_ARGUMENT,
                            "Source volume %s does not exist on pool %s" % (vol_orig, pool))
-    if vol_info(pool, vol_new) is not None:
+    if vol_info(pool, vol_new, fs_type) is not None:
         raise TargetdError(TargetdError.NAME_CONFLICT,
                            "Destination volume %s already exists on pool %s" % (vol_new, pool))
     if snap is None:
@@ -400,7 +400,7 @@ def fs_snapshot_delete(req, pool, name, ss_name):
                            "Could not destroy snapshot")
 
 def fs_clone(req, pool, name, dest_fs_name, snapshot_name=None):
-    _copy(req, pool, name, dest_fs_name, snapshot_name)
+    _copy(req, pool, name, dest_fs_name, "filesystem", snapshot_name)
 
 def fs_pools(req):
     results = []
