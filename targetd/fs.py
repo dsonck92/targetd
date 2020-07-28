@@ -103,17 +103,6 @@ def initialize(config_dict):
     )
 
 
-def pool_check(pool_name):
-    """
-    pool_name *cannot* be trusted, funcs taking a pool param must call
-    this or to ensure passed-in pool name is one targetd has
-    been configured to use.
-    """
-    if pool_name not in pools:
-        raise TargetdError(TargetdError.INVALID_POOL,
-                           "Invalid filesystem pool")
-
-
 def fs_create(req, pool_name, name, size_bytes):
     """
     Create a filesystem inside a given pool with a given name
@@ -122,7 +111,6 @@ def fs_create(req, pool_name, name, size_bytes):
     :param name: name to use for the filesystem
     :param size_bytes: size limit of the filesystetm
     """
-    pool_check(pool_name)
     pool_module(pool_name).fs_create(req, pool_name, name, size_bytes)
 
 
