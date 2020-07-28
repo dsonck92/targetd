@@ -67,7 +67,7 @@ def has_fs_pool(pool_name):
         This can be used to check if module owns given fs_pool without raising
         exception
     """
-    return pool_name in fs_pools
+    return pool_name in pools_fs
 
 def has_udev_path(udev_path):
     try:
