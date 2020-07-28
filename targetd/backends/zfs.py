@@ -393,6 +393,8 @@ def ss(req, pool, name):
 
 
 def fs_snapshot(req, pool, name, dest_ss_name):
+    _check_dataset_name(name)
+    _check_dataset_name(dest_ss_name)
     info = snap_info(pool, name, dest_ss_name)
     if info is not None:
         raise TargetdError(TargetdError.NAME_CONFLICT,
@@ -405,6 +407,8 @@ def fs_snapshot(req, pool, name, dest_ss_name):
 
 
 def fs_snapshot_delete(req, pool, name, ss_name):
+    _check_dataset_name(name)
+    _check_dataset_name(ss_name)
     info = snap_info(pool, name, ss_name)
     if info is None:
         return
