@@ -374,9 +374,7 @@ def ss(req, pool, name):
 
     allprops = _zfs_get([pool+"/"+name], ["name", "guid", "creation"], False, "snapshot")
     for fullname, props in allprops.items():
-        time_epoch = int(
-            mktime(strptime(props['creation'], '%a %b %d %H:%M %Y'))
-        )
+        time_epoch = int(props['creation'])
         st = dict(name=props['name'].replace((pool + "/" + name + "@"), "", 1), uuid=props['guid'], timestamp=time_epoch)
         snapshots.append(st)
 
