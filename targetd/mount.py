@@ -14,6 +14,6 @@ class Mount(object):
             :return: generator of mount info arrays: the constants can be utilized
             to get specific field information
         """
-        with open('/proc/mount', 'r') as proc_mount:
+        with open('/proc/mounts', 'r') as proc_mount:
             for mounted_fs in proc_mount.readlines():
                 yield mounted_fs.split(' ')
