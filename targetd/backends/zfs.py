@@ -344,7 +344,7 @@ def copy(req, pool, vol_orig, vol_new, timeout=10):
     _copy(req, pool, vol_orig, vol_new, vol_info)
 
 
-def _copy(req, pool, vol_orig, vol_new, info_fn, snap = None):
+def _copy(req, pool, vol_orig, vol_new, info_fn, snap=None):
     if not zfs_enable_copy:
         raise TargetdError(TargetdError.NO_SUPPORT, "Copy on ZFS disabled. Consult manual before enabling it.")
     _check_dataset_name(vol_orig)
@@ -357,10 +357,10 @@ def _copy(req, pool, vol_orig, vol_new, info_fn, snap = None):
                            "Destination volume %s already exists on pool %s" % (vol_new, pool))
     if snap is None:
         snap = vol_new + str(int(time()))
-    code, out, err = _zfs_exec_command(["snapshot", "%s/%s@%s" % (pool, vol_orig, snap)])
-    if code != 0:
-        raise TargetdError(TargetdError.UNEXPECTED_EXIT_CODE,
-                           "Could not create snapshot of %s on pool %s" % (vol_orig, pool))
+        code, out, err = _zfs_exec_command(["snapshot", "%s/%s@%s" % (pool, vol_orig, snap)])
+        if code != 0:
+            raise TargetdError(TargetdError.UNEXPECTED_EXIT_CODE,
+                               "Could not create snapshot of %s on pool %s" % (vol_orig, pool))
     code, out, err = _zfs_exec_command(["clone",
                                         "%s/%s@%s" % (pool, vol_orig, snap),
                                         "%s/%s" % (pool, vol_new)
