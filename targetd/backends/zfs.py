@@ -132,7 +132,7 @@ def fs_initialize(config_dict, init_pools):
     global zfs_enable_copy
     zfs_enable_copy = zfs_enable_copy or config_dict['zfs_enable_copy']
     pools_fs = {fs['mount']: fs['device'] for fs in init_pools}
-    check_pools_access(pools_fs)
+    check_pools_access(pools_fs.values())
 
 
 def _check_dataset_name(name):
