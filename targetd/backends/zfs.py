@@ -263,7 +263,7 @@ def fs_hash():
         allprops = _zfs_get([zfs_pool], ["name","mountpoint","guid","used","available"], True, "filesystem")
 
         for fullname, props in allprops.items():
-            if fullname == pool:
+            if fullname == zfs_pool:
                 continue
 
             sub_vol = fullname.replace(zfs_pool + "/", "", 1)
