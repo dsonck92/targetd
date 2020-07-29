@@ -408,7 +408,7 @@ def fs_snapshot(req, pool, name, dest_ss_name):
         raise TargetdError(TargetdError.NAME_CONFLICT,
                            "Snapshot {0} already exists on pool {1} for {2}".format(dest_ss_name, pool, name))
 
-    code, out, err = _zfs_exec_command(["snapshot", "{0}/{1}@{2}".format(pool, name, dest_ss_name)])
+    code, out, err = _zfs_exec_command(["snapshot", "{0}/{1}@{2}".format(zfs_pool, name, dest_ss_name)])
     if code != 0:
         raise TargetdError(TargetdError.UNEXPECTED_EXIT_CODE,
                            "Could not create snapshot")
