@@ -115,7 +115,7 @@ for pool in pools:
                                 str(result['uuid'])))
 
     try:
-        jsonrequest('vol_create', dict(pool=pool, name="test2", size=4000000))
+        jsonrequest('vol_create', dict(pool=pool, name="test2", size=4*1024*1024))
 
         try:
             jsonrequest("vol_copy",
