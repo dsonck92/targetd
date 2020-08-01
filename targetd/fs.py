@@ -226,7 +226,7 @@ def nfs_export_list(req):
     return rc
 
 
-def nfs_export_add(req, host, path, export_path, options):
+def nfs_export_add(req, host, path, options, export_path=None):
 
     if export_path is not None:
         raise TargetdError(TargetdError.NFS_NO_SUPPORT,
