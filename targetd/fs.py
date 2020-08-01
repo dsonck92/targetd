@@ -227,7 +227,7 @@ def nfs_export_list(req):
 
 
 def nfs_export_add(req, host, path, options, export_path=None):
-    log.debug("creating export", host, path, options)
+    log.debug("creating export {0}:{1} -o {2}".format(host, path, options))
     if export_path is not None:
         raise TargetdError(TargetdError.NFS_NO_SUPPORT,
                            "separate export path not supported at "
